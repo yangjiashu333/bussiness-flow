@@ -1,66 +1,72 @@
-// src/App.tsx
+import { useState } from 'react';
+import './App.css';
 
-import { useState } from "react";
-import reactLogo from "./assets/react.svg";
-import viteLogo from "/vite.svg";
-import cloudflareLogo from "./assets/Cloudflare_Logo.svg";
-import honoLogo from "./assets/hono.svg";
-import "./App.css";
+const defaultPayload = JSON.stringify(
+  {
+    message: 'hello from client',
+  },
+  null,
+  2,
+);
 
 function App() {
-	const [count, setCount] = useState(0);
-	const [name, setName] = useState("unknown");
+  const [payload, setPayload] = useState(defaultPayload);
+  const [result, setResult] = useState('');
+  const [loading, setLoading] = useState(false);
 
-	return (
-		<>
-			<div>
-				<a href="https://vite.dev" target="_blank">
-					<img src={viteLogo} className="logo" alt="Vite logo" />
-				</a>
-				<a href="https://react.dev" target="_blank">
-					<img src={reactLogo} className="logo react" alt="React logo" />
-				</a>
-				<a href="https://hono.dev/" target="_blank">
-					<img src={honoLogo} className="logo cloudflare" alt="Hono logo" />
-				</a>
-				<a href="https://workers.cloudflare.com/" target="_blank">
-					<img
-						src={cloudflareLogo}
-						className="logo cloudflare"
-						alt="Cloudflare logo"
-					/>
-				</a>
-			</div>
-			<h1>Vite + React + Hono + Cloudflare</h1>
-			<div className="card">
-				<button
-					onClick={() => setCount((count) => count + 1)}
-					aria-label="increment"
-				>
-					count is {count}
-				</button>
-				<p>
-					Edit <code>src/App.tsx</code> and save to test HMR
-				</p>
-			</div>
-			<div className="card">
-				<button
-					onClick={() => {
-						fetch("/api/")
-							.then((res) => res.json() as Promise<{ name: string }>)
-							.then((data) => setName(data.name));
-					}}
-					aria-label="get name"
-				>
-					Name from API is: {name}
-				</button>
-				<p>
-					Edit <code>worker/index.ts</code> to change the name
-				</p>
-			</div>
-			<p className="read-the-docs">Click on the logos to learn more</p>
-		</>
-	);
+  const send = async () => {
+    setLoading(true);
+    setResult('');
+
+    try {
+      const response = await fetch('/api/echo', {
+        method: 'POST',
+        headers: {
+          'content-type': 'application/json',
+          // Warning: hard-coded API keys in the client are visible to attackers.
+          'x-api-key': 'change-me',
+        },
+        body: payload,
+      });
+
+      const text = await response.text();
+      if (!response.ok) {
+        setResult(text);
+        return;
+      }
+
+      setResult(JSON.stringify(JSON.parse(text), null, 2));
+    } catch (error) {
+      setResult(String(error));
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="app">
+      <header>
+        <h1>Worker Echo Demo</h1>
+        <p>Send JSON to the Worker, get it back with processed: true.</p>
+      </header>
+      <section className="panel">
+        <label htmlFor="payload">Request JSON</label>
+        <textarea
+          id="payload"
+          value={payload}
+          onChange={(event) => setPayload(event.target.value)}
+          spellCheck={false}
+        />
+        <button type="button" onClick={send} disabled={loading}>
+          {loading ? 'Sending...' : 'Send to Worker'}
+        </button>
+      </section>
+      <section className="panel">
+        <label htmlFor="result">Response</label>
+        <pre id="result">{result || 'No response yet.'}</pre>
+      </section>
+    </div>
+  );
 }
 
 export default App;
