@@ -1,7 +1,9 @@
 export type Bindings = {
   CORS_ORIGIN?: string;
   APP_ENV?: string;
-  API_KEY?: string;
+  OPENAI_API_KEY?: string;
+  OPENAI_BASE_URL?: string;
+  OPENAI_MODEL?: string;
   RATE_LIMIT_MAX?: string;
   RATE_LIMIT_WINDOW_SECONDS?: string;
   MAX_BODY_BYTES?: string;

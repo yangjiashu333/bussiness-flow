@@ -42,13 +42,25 @@ A live deployment of this template is available at:
 
 ## Development
 
-Install dependencies:
+### 1. Install dependencies
 
 ```bash
 npm install
 ```
 
-Start the development server with:
+### 2. Configure environment variables
+
+```bash
+# 复制环境变量示例文件
+cp .dev.vars.example .dev.vars
+
+# 编辑 .dev.vars 填入真实的密钥
+# - OPENAI_API_KEY: 从 https://console.x.ai 获取
+```
+
+更多配置详情请查看 [DEPLOYMENT.md](./DEPLOYMENT.md)
+
+### 3. Start the development server
 
 ```bash
 npm run dev
@@ -58,14 +70,13 @@ Your application will be available at [http://localhost:5173](http://localhost:5
 
 ## Demo API (serverless-friendly)
 
-This template includes a minimal echo endpoint that waits ~1ms and returns the input JSON with `processed: true`.
+This template includes a minimal echo endpoint that waits ~1ms and returns the input JSON with `processed: true`, plus an OpenAI-generated explanation when `OPENAI_API_KEY`, `OPENAI_BASE_URL`, and `OPENAI_MODEL` are configured.
 
 Endpoint:
 
 ```bash
 curl -X POST "http://localhost:5173/api/echo" \
   -H "content-type: application/json" \
-  -H "x-api-key: change-me" \
   -d '{"message":"hello"}'
 ```
 
@@ -73,7 +84,6 @@ curl -X POST "http://localhost:5173/api/echo" \
 
 Serverless has no "always-on" app server, so protection lives inside the Worker:
 
-- **API key gate**: blocks anonymous traffic before any expensive work.
 - **Rate limit**: basic in-memory bucket to prevent bursts from single IPs.
 - **Input limits**: body size + query length to stop oversized payloads.
 - **Timeout + retry**: outbound calls are bounded so upstream slowness doesn't blow up cost.
@@ -81,6 +91,22 @@ Serverless has no "always-on" app server, so protection lives inside the Worker:
 In production, upgrade the rate limiter to a durable store (KV or Durable Objects) so limits are shared across all edge nodes.
 
 ## Production
+
+### 1. Set production secrets
+
+在部署前，需要在 Cloudflare 设置敏感环境变量：
+
+```bash
+# 登录 Cloudflare
+npx wrangler login
+
+# 设置敏感变量
+npx wrangler secret put OPENAI_API_KEY
+```
+
+或者在 [Cloudflare Dashboard](https://dash.cloudflare.com) 中设置。详见 [DEPLOYMENT.md](./DEPLOYMENT.md)
+
+### 2. Build and deploy
 
 Build your project for production:
 
@@ -97,10 +123,10 @@ npm run preview
 Deploy your project to Cloudflare Workers:
 
 ```bash
-npm run build && npm run deploy
+npm run deploy
 ```
 
-Monitor your workers:
+### 3. Monitor your workers
 
 ```bash
 npx wrangler tail

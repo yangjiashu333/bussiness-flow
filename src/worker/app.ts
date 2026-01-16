@@ -7,7 +7,6 @@ import { secureHeaders } from 'hono/secure-headers';
 import type { HonoEnv } from './types';
 import { errorHandler } from './handlers/error';
 import { notFoundHandler } from './handlers/not-found';
-import { apiKeyAuth } from './middleware/auth';
 import { rateLimit } from './middleware/rate-limit';
 import { apiRoutes } from './routes/api';
 import { healthRoutes } from './routes/health';
@@ -24,7 +23,6 @@ app.use('/api/*', async (c, next) => {
   return cors({ origin })(c, next);
 });
 app.use('/api/*', rateLimit);
-app.use('/api/*', apiKeyAuth);
 
 app.route('/api', apiRoutes);
 app.route('/health', healthRoutes);

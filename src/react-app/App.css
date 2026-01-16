@@ -1,57 +1,101 @@
 .app {
-  max-width: 960px;
+  max-width: 1040px;
   margin: 0 auto;
-  padding: 48px 20px 64px;
+  padding: 56px 20px 80px;
   display: grid;
-  gap: 24px;
+  gap: 28px;
+}
+
+header {
+  display: grid;
+  gap: 10px;
+  border-left: 3px solid var(--accent);
+  padding: 16px 20px 8px;
 }
 
 header h1 {
-  margin: 0 0 8px;
-  font-size: 2.4rem;
+  margin: 0;
+  font-size: 2.5rem;
+  letter-spacing: -0.01em;
+  color: var(--ink);
 }
 
 header p {
   margin: 0;
-  color: #4b5563;
+  color: var(--muted);
+  font-size: 1rem;
+  max-width: 620px;
 }
 
 .panel {
   display: grid;
-  gap: 12px;
-  padding: 16px;
-  border-radius: 12px;
-  border: 1px solid #e5e7eb;
-  background: #fff;
-  box-shadow: 0 6px 24px rgba(15, 23, 42, 0.08);
+  gap: 16px;
+  padding: 22px;
+  border-radius: 14px;
+  border: 1px solid var(--border);
+  background: #ffffff;
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.06);
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    transform 0.2s ease;
+}
+
+.panel:hover {
+  transform: translateY(-1px);
+  border-color: rgba(15, 23, 42, 0.2);
+  box-shadow: 0 16px 28px rgba(15, 23, 42, 0.08);
 }
 
 label {
   font-weight: 600;
+  font-size: 0.95rem;
+  color: var(--ink);
 }
 
 textarea {
-  min-height: 200px;
+  min-height: 180px;
   resize: vertical;
-  font-family:
-    ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New',
-    monospace;
-  font-size: 0.95rem;
-  padding: 12px;
+  font-family: 'Source Code Pro', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.92rem;
+  padding: 14px;
   border-radius: 10px;
-  border: 1px solid #d1d5db;
+  border: 1px solid var(--border);
   background: #f9fafb;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    background 0.2s ease;
+}
+
+textarea:focus {
+  outline: none;
+  border-color: rgba(15, 23, 42, 0.35);
+  background: #ffffff;
+  box-shadow: 0 0 0 3px rgba(15, 23, 42, 0.08);
 }
 
 button {
   justify-self: start;
-  padding: 10px 18px;
+  padding: 10px 24px;
   border-radius: 999px;
-  border: none;
-  background: #111827;
-  color: #fff;
+  border: 1px solid rgba(15, 23, 42, 0.2);
+  background: #0b1f1a;
+  color: #ffffff;
   font-weight: 600;
+  font-size: 0.95rem;
   cursor: pointer;
+  letter-spacing: 0.01em;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    opacity 0.2s ease;
+  box-shadow: 0 8px 16px rgba(15, 23, 42, 0.2);
+}
+
+button:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 12px 20px rgba(15, 23, 42, 0.25);
 }
 
 button:disabled {
@@ -61,10 +105,142 @@ button:disabled {
 
 pre {
   margin: 0;
-  min-height: 140px;
-  padding: 12px;
-  background: #0f172a;
-  color: #e2e8f0;
+  padding: 16px;
+  background: #0b1f1a;
+  color: #e5e7eb;
   border-radius: 10px;
   overflow: auto;
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+
+pre.payload-result {
+  min-height: 100px;
+}
+
+pre.error {
+  background: #7f1d1d;
+  color: #fee2e2;
+}
+
+.ai-panel {
+  border-color: rgba(15, 23, 42, 0.18);
+  background: #ffffff;
+}
+
+.ai-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.model-badge {
+  padding: 3px 10px;
+  background: #111827;
+  color: #f9fafb;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.ai-explanation {
+  padding: 16px;
+  background: #f9fafb;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  color: var(--ink);
+  line-height: 1.8;
+  font-size: 1rem;
+}
+
+.metadata-panel {
+  background: #ffffff;
+}
+
+.metadata-grid {
+  display: grid;
+  gap: 12px;
+}
+
+.metadata-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  background: #ffffff;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+}
+
+.metadata-item.info-message {
+  background: #f9fafb;
+  border-color: var(--border);
+  justify-content: center;
+  color: var(--muted);
+  font-weight: 500;
+}
+
+.metadata-label {
+  font-weight: 500;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.metadata-value {
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.metadata-value.mono {
+  font-family: 'Source Code Pro', ui-monospace, monospace;
+  font-size: 0.85rem;
+  color: #111827;
+}
+
+.error-panel {
+  background: #fef2f2;
+  border-color: rgba(127, 29, 29, 0.2);
+}
+
+.empty-state {
+  border-style: dashed;
+  background: #ffffff;
+}
+
+.empty-content {
+  text-align: center;
+  padding: 32px 20px;
+  color: var(--muted);
+}
+
+.empty-content p {
+  margin: 8px 0;
+  font-size: 1rem;
+}
+
+.empty-hint {
+  font-size: 0.95rem;
+  color: #9ca3af;
+}
+
+@media (max-width: 720px) {
+  .app {
+    padding: 40px 16px 64px;
+  }
+
+  header {
+    padding: 12px 16px 0;
+  }
+
+  header h1 {
+    font-size: 2rem;
+  }
+
+  button {
+    width: 100%;
+    justify-self: stretch;
+    text-align: center;
+  }
 }
